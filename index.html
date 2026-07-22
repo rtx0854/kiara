@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz cumpleaños 🍓</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF6EE;
+    --berry:#E8435C;
+    --berry-dark:#B3123B;
+    --pink:#FFC7D9;
+    --pink-soft:#FFE3EC;
+    --leaf:#5B8C5A;
+    --leaf-dark:#3E6B40;
+    --gold:#F7C548;
+    --ink:#5A3A3F;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    overflow:hidden;
+    background:var(--cream);
+    font-family:'Quicksand',sans-serif;
+    color:var(--ink);
+  }
+  .stage{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    background:
+      radial-gradient(circle at 15% 20%, var(--pink-soft) 0%, transparent 45%),
+      radial-gradient(circle at 85% 80%, var(--pink) 0%, transparent 50%),
+      var(--cream);
+    overflow:hidden;
+  }
+  .scene{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(16px);
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  .scene.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+  }
+
+  h1,h2,h3{
+    font-family:'Caveat',cursive;
+    margin:0;
+    color:var(--berry-dark);
+  }
+
+  /* ---------- decorative strawberries scattered ---------- */
+  .deco-strawberry{
+    position:absolute;
+    font-size:28px;
+    opacity:.55;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.05));
+    user-select:none;
+  }
+
+  /* ---------- SCENE 1: cake ---------- */
+  .cake-title{
+    font-size:clamp(2.2rem,6vw,3.4rem);
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .cake-sub{
+    font-size:1.05rem;
+    color:var(--ink);
+    opacity:.75;
+    margin-bottom:28px;
+    text-align:center;
+    padding:0 20px;
+  }
+  .cake-wrap{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    transition:transform .6s ease;
+  }
+  .cake-wrap.blown .candle .flame{
+    opacity:0;
+    transform:translateY(6px) scale(.3);
+  }
+  .cake-wrap.blown .candle .smoke{
+    opacity:.5;
+    animation:smokeUp 1.4s ease forwards;
+  }
+  .candles{
+    display:flex;
+    gap:18px;
+    z-index:3;
+    margin-bottom:-6px;
+  }
+  .candle{
+    position:relative;
+    width:8px;
+    height:46px;
+    background:linear-gradient(180deg,#fff, var(--pink));
+    border-radius:3px;
+    box-shadow:inset -2px 0 3px rgba(0,0,0,.08);
+  }
+  .candle .flame{
+    position:absolute;
+    top:-22px;
+    left:50%;
+    transform:translateX(-50%);
+    width:14px;
+    height:22px;
+    background:radial-gradient(circle at 50% 70%, #fff6c8, var(--gold) 55%, var(--berry) 100%);
+    border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+    animation:flicker 1s ease-in-out infinite alternate;
+    transition:opacity .5s ease, transform .5s ease;
+    transform-origin:bottom center;
+  }
+  .candle .smoke{
+    position:absolute;
+    top:-26px;
+    left:50%;
+    width:3px;
+    height:3px;
+    background:#bbb;
+    border-radius:50%;
+    opacity:0;
+  }
+  @keyframes flicker{
+    0%{ transform:translateX(-50%) rotate(-3deg) scaleY(1); }
+    100%{ transform:translateX(-50%) rotate(3deg) scaleY(1.08); }
+  }
+  @keyframes smokeUp{
+    0%{ opacity:.6; transform:translate(-50%,0) scale(1);}
+    100%{ opacity:0; transform:translate(-50%,-40px) scale(4);}
+  }
+  .cake{
+    position:relative;
+    width:250px;
+    padding-top:6px;
+  }
+  .tier{
+    position:relative;
+    border-radius:8px;
+    background:linear-gradient(180deg,#fffaf5 0%, var(--pink-soft) 100%);
+    border:2px solid var(--pink);
+    box-shadow:0 6px 14px rgba(179,18,59,.14), inset 0 0 0 2px rgba(255,255,255,.4);
+    overflow:visible;
+  }
+  .tier.top{ width:150px; height:64px; margin:0 auto; z-index:3;}
+  .tier.bottom{ width:250px; height:86px; margin-top:16px; z-index:1;}
+  /* glossy highlight streak on the cake body */
+  .tier::after{
+    content:"";
+    position:absolute;
+    top:8px; left:14%;
+    width:16%;
+    height:64%;
+    background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0));
+    border-radius:50%;
+    filter:blur(1.5px);
+    pointer-events:none;
+  }
+  .frosting{
+    position:absolute;
+    top:-12px;
+    left:0;
+    right:0;
+    height:24px;
+    background:
+      radial-gradient(circle at 10px 10px, #fff 8px, transparent 9px) repeat-x,
+      #fffdfa;
+    background-size:20px 20px;
+    border-radius:10px 10px 0 0;
+    border:2px solid var(--pink);
+    border-bottom:none;
+    box-shadow:inset 0 -3px 4px rgba(255,255,255,.8);
+  }
+  /* icing drips hanging from the frosting edge */
+  .drips{
+    position:absolute;
+    top:12px;
+    left:0;
+    right:0;
+    height:24px;
+    z-index:1;
+    pointer-events:none;
+  }
+  .drip{
+    position:absolute;
+    top:0;
+    width:15px;
+    border-radius:0 0 60% 60%;
+    background:linear-gradient(180deg,#fffdfa, var(--pink) 85%);
+    box-shadow:inset -2px -2px 3px rgba(179,18,59,.08);
+  }
+  /* candy sprinkles scattered on the frosting */
+  .sprinkle{
+    position:absolute;
+    width:5px;
+    height:10px;
+    border-radius:2px;
+    top:-6px;
+  }
+  /* ribbon band wrapping the tier, with a bow at the front */
+  .ribbon{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:14px;
+    height:13px;
+    background:repeating-linear-gradient(45deg, var(--berry) 0 8px, var(--gold) 8px 16px);
+    box-shadow:0 1px 3px rgba(0,0,0,.15);
+    z-index:2;
+  }
+  .bow{
+    position:absolute;
+    bottom:6px;
+    left:50%;
+    transform:translateX(-50%);
+    width:32px;
+    height:20px;
+    z-index:3;
+  }
+  .bow .loop{
+    position:absolute;
+    width:16px;
+    height:16px;
+    top:0;
+    background:var(--berry-dark);
+    box-shadow:0 2px 3px rgba(0,0,0,.15);
+  }
+  .bow .loop.l{ left:0; border-radius:60% 0 60% 60%; }
+  .bow .loop.r{ right:0; border-radius:0 60% 60% 60%; }
+  .bow .knot{
+    position:absolute;
+    left:50%;
+    top:3px;
+    transform:translateX(-50%);
+    width:8px;
+    height:11px;
+    background:var(--gold);
+    border-radius:2px;
+    z-index:1;
+  }
+  .berries-row{
+    position:absolute;
+    top:-30px;
+    left:0;
+    right:0;
+    display:flex;
+    justify-content:space-evenly;
+    z-index:4;
+  }
+  .mini-berry{ font-size:17px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+  .cake-plate{
+    position:relative;
+    width:280px;
+    height:16px;
+    background:linear-gradient(180deg,#fff, var(--pink) 55%, var(--berry));
+    border-radius:50%;
+    margin-top:10px;
+    box-shadow:0 10px 18px rgba(0,0,0,.14), inset 0 2px 3px rgba(255,255,255,.6);
+  }
+  .cake-plate::before{
+    content:"";
+    position:absolute;
+    top:-9px;
+    left:8%;
+    right:8%;
+    height:11px;
+    background:radial-gradient(circle at 8px 8px, #fff 5px, transparent 6px) repeat-x;
+    background-size:15px 15px;
+    opacity:.85;
+  }
+  .blow-btn{
+    margin-top:34px;
+    font-family:'Quicksand',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    color:#fff;
+    background:linear-gradient(135deg,var(--berry),var(--berry-dark));
+    border:none;
+    padding:14px 30px;
+    border-radius:40px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(232,67,92,.35);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .blow-btn:hover{ transform:translateY(-2px) scale(1.03); box-shadow:0 12px 24px rgba(232,67,92,.45); }
+  .blow-btn:active{ transform:translateY(0) scale(.98); }
+  .blow-hint{
+    margin-top:10px;
+    font-size:.85rem;
+    opacity:.55;
+  }
+
+  /* falling strawberries confetti */
+  .confetti-layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:50;
+  }
+  .confetti-piece{
+    position:absolute;
+    top:-40px;
+    font-size:22px;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(360deg); opacity:.9; }
+  }
+
+  /* ---------- letter cards (scene 2 & 3) ---------- */
+  .letter-card{
+    position:relative;
+    width:min(520px,88vw);
+    background:#fffefb;
+    border-radius:18px;
+    padding:38px 34px 30px;
+    box-shadow:0 20px 45px rgba(179,18,59,.18);
+    border:2px solid var(--pink);
+    text-align:center;
+    animation:cardPop .6s ease;
+  }
+  @keyframes cardPop{
+    0%{ opacity:0; transform:scale(.85) translateY(20px);}
+    100%{ opacity:1; transform:scale(1) translateY(0);}
+  }
+  .letter-card::before{
+    content:"🍓";
+    position:absolute;
+    top:-22px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:38px;
+    filter:drop-shadow(0 4px 4px rgba(0,0,0,.15));
+  }
+  .letter-title{
+    font-size:1.8rem;
+    margin-bottom:14px;
+  }
+  .letter-text{
+    font-size:1.02rem;
+    line-height:1.7;
+    color:var(--ink);
+    white-space:pre-line;
+  }
+  .next-btn-wrap{
+    position:fixed;
+    left:26px;
+    bottom:26px;
+    z-index:20;
+  }
+  .next-btn{
+    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-size:1.3rem;
+    color:var(--berry-dark);
+    background:#fff;
+    border:2px solid var(--berry);
+    padding:10px 26px;
+    border-radius:30px;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(232,67,92,.25);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform .2s ease;
+  }
+  .next-btn:hover{ transform:translateX(4px) scale(1.04); }
+
+  .mute-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:30;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:2px solid var(--berry);
+    background:#fff;
+    color:var(--berry-dark);
+    font-size:1.3rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(232,67,92,.25);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .mute-btn:hover{ transform:scale(1.08); box-shadow:0 10px 20px rgba(232,67,92,.35); }
+  .mute-btn.muted{ opacity:.6; }
+
+  /* ---------- SCENE 4: strawberry field / final ---------- */
+  .field-scene{
+    background:
+      radial-gradient(circle at 50% 120%, #ffe0ea 0%, transparent 60%),
+      linear-gradient(180deg, var(--cream) 0%, #fff0f4 60%, #ffe3ea 100%);
+  }
+  .field-title{
+    font-size:clamp(2.4rem,7vw,4rem);
+    text-align:center;
+  }
+  .field-sub{
+    font-size:1.5rem;
+    font-family:'Caveat',cursive;
+    color:var(--berry);
+    margin-top:2px;
+  }
+  .bush{
+    position:relative;
+    width:min(560px,90vw);
+    height:150px;
+    margin-top:18px;
+  }
+  .bush-leaves{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    height:90px;
+    background:radial-gradient(circle, var(--leaf) 0 40%, transparent 41%) 0 0/70px 70px,
+               radial-gradient(circle, var(--leaf-dark) 0 40%, transparent 41%) 35px 15px/70px 70px;
+    border-radius:40px 40px 20px 20px;
+    opacity:.9;
+  }
+  .berry-on-bush{
+    position:absolute;
+    font-size:30px;
+    animation:sway 3s ease-in-out infinite;
+  }
+  @keyframes sway{
+    0%,100%{ transform:rotate(-4deg); }
+    50%{ transform:rotate(4deg); }
+  }
+  .countdown-wrap{
+    margin-top:26px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .countdown-label{
+    font-size:.95rem;
+    opacity:.65;
+  }
+  .countdown-num{
+    font-family:'Caveat',cursive;
+    font-size:3.2rem;
+    color:var(--berry-dark);
+    line-height:1;
+  }
+
+  /* ---------- SCENE 5: final images ---------- */
+  .gallery-scene{
+    background:linear-gradient(180deg,#fff0f4,var(--pink-soft));
+  }
+  .gallery-title{
+    font-size:2.2rem;
+    margin-bottom:22px;
+    text-align:center;
+  }
+  .gallery-grid{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:0 20px;
+  }
+  .gallery-photo{
+    width:min(260px,42vw);
+    height:min(260px,42vw);
+    object-fit:cover;
+    border-radius:16px;
+    border:4px solid #fff;
+    box-shadow:0 14px 30px rgba(179,18,59,.25);
+    transform:rotate(-3deg);
+    background:#fff;
+  }
+  .gallery-photo:nth-child(2){ transform:rotate(3deg); }
+  .gallery-final-msg{
+    margin-top:26px;
+    font-family:'Caveat',cursive;
+    font-size:1.6rem;
+    color:var(--berry-dark);
+    text-align:center;
+  }
+
+  audio{ display:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- decorative scattered strawberries -->
+  <div class="deco-strawberry" style="top:8%;left:6%;">🍓</div>
+  <div class="deco-strawberry" style="top:18%;right:8%;">🍓</div>
+  <div class="deco-strawberry" style="bottom:10%;left:10%;">🍓</div>
+  <div class="deco-strawberry" style="bottom:16%;right:12%;">🍓</div>
+
+  <!-- ============ SCENE 1: CAKE ============ -->
+  <section class="scene active" id="scene-cake">
+    <h1 class="cake-title">Una torta 🎂</h1>
+    <p class="cake-sub">para ti, que mereces celebrar en grande</p>
+
+    <div class="cake-wrap" id="cakeWrap">
+      <div class="candles">
+        <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+        <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+        <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+      </div>
+      <div class="cake">
+        <div class="tier top">
+          <div class="frosting"></div>
+          <div class="drips">
+            <span class="drip" style="left:4%;height:11px;"></span>
+            <span class="drip" style="left:24%;height:16px;"></span>
+            <span class="drip" style="left:46%;height:9px;"></span>
+            <span class="drip" style="left:66%;height:15px;"></span>
+            <span class="drip" style="left:88%;height:11px;"></span>
+          </div>
+          <span class="sprinkle" style="left:12%;background:var(--berry);transform:rotate(15deg);"></span>
+          <span class="sprinkle" style="left:28%;background:var(--gold);transform:rotate(-20deg);"></span>
+          <span class="sprinkle" style="left:44%;background:var(--leaf);transform:rotate(35deg);"></span>
+          <span class="sprinkle" style="left:60%;background:#fff;transform:rotate(-10deg);"></span>
+          <span class="sprinkle" style="left:76%;background:var(--berry-dark);transform:rotate(25deg);"></span>
+          <div class="ribbon"></div>
+          <div class="bow"><span class="loop l"></span><span class="loop r"></span><span class="knot"></span></div>
+          <div class="berries-row">
+            <span class="mini-berry">🍓</span><span class="mini-berry">🍓</span><span class="mini-berry">🍓</span>
+          </div>
+        </div>
+        <div class="tier bottom">
+          <div class="frosting"></div>
+          <div class="drips">
+            <span class="drip" style="left:3%;height:13px;"></span>
+            <span class="drip" style="left:16%;height:9px;"></span>
+            <span class="drip" style="left:30%;height:17px;"></span>
+            <span class="drip" style="left:44%;height:10px;"></span>
+            <span class="drip" style="left:58%;height:16px;"></span>
+            <span class="drip" style="left:72%;height:10px;"></span>
+            <span class="drip" style="left:86%;height:14px;"></span>
+          </div>
+          <span class="sprinkle" style="left:10%;background:var(--gold);transform:rotate(-15deg);"></span>
+          <span class="sprinkle" style="left:22%;background:var(--berry);transform:rotate(20deg);"></span>
+          <span class="sprinkle" style="left:35%;background:#fff;transform:rotate(-30deg);"></span>
+          <span class="sprinkle" style="left:65%;background:var(--leaf);transform:rotate(10deg);"></span>
+          <span class="sprinkle" style="left:78%;background:var(--berry-dark);transform:rotate(-20deg);"></span>
+          <span class="sprinkle" style="left:90%;background:var(--gold);transform:rotate(25deg);"></span>
+          <div class="ribbon"></div>
+          <div class="bow"><span class="loop l"></span><span class="loop r"></span><span class="knot"></span></div>
+        </div>
+      </div>
+      <div class="cake-plate"></div>
+    </div>
+
+    <button class="blow-btn" id="blowBtn">Apaga las velas 🕯️</button>
+    <p class="blow-hint">(toca el botón para pedir tu deseo)</p>
+  </section>
+
+  <!-- ============ SCENE 2: CARD 1 ============ -->
+  <section class="scene" id="scene-card1">
+    <div class="letter-card">
+      <h2 class="letter-title">Para ti 🍓</h2>
+      <p class="letter-text">¡Feliz cumpleaños Ashley!
+
+Hoy celebro tu vida y la bonita casualidad de tenerte en la mía. Gracias por cada risa compartida, por tus abrazos sinceros y por ser ese faro de luz que ilumina los días grises. Eres una persona increíble y mereces que el universo te devuelva multiplicado todo lo bonito que das al mundo.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 3: CARD 2 ============ -->
+  <section class="scene" id="scene-card2">
+    <div class="letter-card">
+      <h2 class="letter-title">Un poquito más 💌</h2>
+      <p class="letter-text">Más allá de las felicitaciones, solo quería recordarte lo lindo que es tenerte como amiga. Gracias por estar siempre ahí para escuchar mis tonterías, por los memes y por las risas de siempre. Qué gran acierto haber coincidido contigo.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 4: STRAWBERRY FIELD + COUNTDOWN ============ -->
+  <section class="scene" id="scene-field">
+    <h1 class="field-title">Feliz cumpleaños Ashley</h1>
+    <div class="field-sub">de Kiara</div>
+
+    <div class="bush">
+      <div class="bush-leaves"></div>
+      <div class="berry-on-bush" style="left:12%;top:18px;animation-delay:.2s;">🍓</div>
+      <div class="berry-on-bush" style="left:32%;top:0px;animation-delay:.6s;">🍓</div>
+      <div class="berry-on-bush" style="left:52%;top:22px;animation-delay:.1s;">🍓</div>
+      <div class="berry-on-bush" style="left:70%;top:4px;animation-delay:.8s;">🍓</div>
+      <div class="berry-on-bush" style="left:86%;top:20px;animation-delay:.4s;">🍓</div>
+    </div>
+
+    <div class="countdown-wrap">
+      <div class="countdown-label">tu sorpresa llega en...</div>
+      <div class="countdown-num" id="countdownNum">10 segundos</div>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 5: FINAL PHOTOS ============ -->
+  <section class="scene" id="scene-gallery">
+    <h2 class="gallery-title">Para guardar siempre 🍓</h2>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <p class="gallery-final-msg">Feliz cumpleaños Ashley. Te quiero mucho 🌷</p>
+  </section>
+
+  <div class="next-btn-wrap" id="nextBtnWrap" style="display:none;">
+    <button class="next-btn" id="nextBtn">Siguiente 🍓 →</button>
+  </div>
+
+  <button class="mute-btn" id="muteBtn" title="Pausar música" aria-label="Pausar música">🔊</button>
+
+</div>
+
+<div class="confetti-layer" id="confettiLayer"></div>
+
+<!-- ======= AUDIO =======
+  Sube estos archivos SUELTOS (mismo lugar que index.html, sin carpetas):
+  spring-day.mp3   -> suena en la torta y en las cartas
+  stay.mp3         -> suena en la escena final (fresas + contador)
+-->
+<audio id="audioSpring" src="spring-day.mp3" loop></audio>
+<audio id="audioStay" src="stay.mp3" loop></audio>
+
+<script>
+  // ---------- helpers ----------
+  const scenes = {
+    cake: document.getElementById('scene-cake'),
+    card1: document.getElementById('scene-card1'),
+    card2: document.getElementById('scene-card2'),
+    field: document.getElementById('scene-field'),
+    gallery: document.getElementById('scene-gallery'),
+  };
+  const nextBtnWrap = document.getElementById('nextBtnWrap');
+  const nextBtn = document.getElementById('nextBtn');
+  const audioSpring = document.getElementById('audioSpring');
+  const audioStay = document.getElementById('audioStay');
+
+  function showScene(name){
+    Object.values(scenes).forEach(s => s.classList.remove('active'));
+    scenes[name].classList.add('active');
+  }
+
+  let currentAudio = null;
+
+  function playAudio(a){
+    a.volume = 0.7;
+    a.currentTime = 0;
+    a.play().catch(()=>{ /* el navegador puede bloquear autoplay hasta un gesto del usuario */ });
+    currentAudio = a;
+    muteBtn.textContent = '🔊';
+    muteBtn.classList.remove('muted');
+  }
+  function stopAudio(a){
+    a.pause();
+  }
+
+  // ---------- botón para pausar / reanudar la música ----------
+  const muteBtn = document.getElementById('muteBtn');
+  muteBtn.addEventListener('click', () => {
+    if(!currentAudio) return;
+    if(currentAudio.paused){
+      currentAudio.play().catch(()=>{});
+      muteBtn.textContent = '🔊';
+      muteBtn.classList.remove('muted');
+      muteBtn.title = 'Pausar música';
+    } else {
+      currentAudio.pause();
+      muteBtn.textContent = '🔇';
+      muteBtn.classList.add('muted');
+      muteBtn.title = 'Reanudar música';
+    }
+  });
+
+  // ---------- SCENE 1: soplar velas ----------
+  const cakeWrap = document.getElementById('cakeWrap');
+  const blowBtn = document.getElementById('blowBtn');
+  const confettiLayer = document.getElementById('confettiLayer');
+  const confettiEmojis = ['🍓','🌸','💗','🍓','✨'];
+
+  function launchConfetti(){
+    const total = 60;
+    for(let i=0;i<total;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.textContent = confettiEmojis[Math.floor(Math.random()*confettiEmojis.length)];
+      piece.style.left = Math.random()*100 + 'vw';
+      const duration = 2.4 + Math.random()*2.2;
+      const delay = Math.random()*0.6;
+      piece.style.fontSize = (16 + Math.random()*18) + 'px';
+      piece.style.animationDuration = duration + 's';
+      piece.style.animationDelay = delay + 's';
+      confettiLayer.appendChild(piece);
+      setTimeout(()=>piece.remove(), (duration+delay)*1000 + 200);
+    }
+  }
+
+  blowBtn.addEventListener('click', () => {
+    if(cakeWrap.classList.contains('blown')) return;
+    cakeWrap.classList.add('blown');
+    launchConfetti();
+    playAudio(audioSpring);
+    blowBtn.disabled = true;
+    blowBtn.style.opacity = '.6';
+    setTimeout(() => {
+      showScene('card1');
+      nextBtnWrap.style.display = 'block';
+    }, 1600);
+  });
+
+  // ---------- SIGUIENTE: card1 -> card2 -> field ----------
+  let step = 1;
+  nextBtn.addEventListener('click', () => {
+    if(step === 1){
+      showScene('card2');
+      step = 2;
+    } else if(step === 2){
+      nextBtnWrap.style.display = 'none';
+      stopAudio(audioSpring);
+      showScene('field');
+      playAudio(audioStay);
+      startCountdown();
+      step = 3;
+    }
+  });
+
+  // ---------- SCENE 4: contador ----------
+  const countdownNum = document.getElementById('countdownNum');
+  let countdownStarted = false;
+
+  function startCountdown(){
+    if(countdownStarted) return;
+    countdownStarted = true;
+    let t = 15;
+    countdownNum.textContent = t + ' segundos';
+    const interval = setInterval(() => {
+      t--;
+      if(t > 0){
+        countdownNum.textContent = t + (t === 1 ? ' segundo' : ' segundos');
+      } else {
+        clearInterval(interval);
+        countdownNum.textContent = '¡Ya! 🍓';
+        setTimeout(showGallery, 700);
+      }
+    }, 1000);
+  }
+
+  // ---------- SCENE 5: imágenes random ----------
+  // Sube tus fotos SUELTAS (mismo lugar que index.html, sin carpetas),
+  // y ajusta esta lista con los nombres de tus archivos.
+  const imagePool = [
+    '1.png',
+    '2.png',
+  ];
+
+  function pickTwoRandom(arr){
+    const copy = [...arr];
+    const picked = [];
+    for(let i=0;i<2 && copy.length>0;i++){
+      const idx = Math.floor(Math.random()*copy.length);
+      picked.push(copy[idx]);
+      copy.splice(idx,1);
+    }
+    return picked;
+  }
+
+  function showGallery(){
+    const grid = document.getElementById('galleryGrid');
+    grid.innerHTML = '';
+    const chosen = pickTwoRandom(imagePool);
+    chosen.forEach(src => {
+      const img = document.createElement('img');
+      img.className = 'gallery-photo';
+      img.src = src;
+      img.alt = 'Foto especial';
+      img.onerror = () => { img.alt = 'Coloca tus fotos junto a index.html'; };
+      grid.appendChild(img);
+    });
+    showScene('gallery');
+  }
+</script>
+
+</body>
+</html>
